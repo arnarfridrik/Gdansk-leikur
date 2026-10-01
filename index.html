@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="is">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Árshátíð Gdansk-vina</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+*{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+/* Layout: one narrow column, a hringur-progress strip on top, one station card at a time */
+:root{
+  --bg:#eef1ee; --surface:#ffffff; --ink:#1f2a26; --muted:#5d6b65; --line:#d3dbd6;
+  --sulfur:#b88a10; --sulfur-soft:#f5ecd0; --moss:#2f5d4e; --ok:#2f7a4f; --bad:#a3402f; --car:#6a35b0; --car-glass:#cfd8e3;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Source Serif 4", Georgia, serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#151b19; --surface:#1e2724; --ink:#e6ece9; --muted:#9aa8a2; --line:#33403b;
+  --sulfur:#e2b53c; --sulfur-soft:#3a3218; --moss:#7fbca5; --ok:#6cc48f; --bad:#e2826f; --car:#a877e8; --car-glass:#3b4a55; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#151b19; --surface:#1e2724; --ink:#e6ece9; --muted:#9aa8a2; --line:#33403b;
+  --sulfur:#e2b53c; --sulfur-soft:#3a3218; --moss:#7fbca5; --ok:#6cc48f; --bad:#e2826f; --car:#a877e8; --car-glass:#3b4a55; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55}
+.wrap{max-width:620px;margin:0 auto;padding-inline:16px;padding-block:24px 64px;display:flex;flex-direction:column;gap:20px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.1}
+h1{font-size:2.4rem;font-weight:800;letter-spacing:-.02em}
+h2{font-size:1.6rem;font-weight:800}
+h3{font-size:1rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+p{margin:0}
+.lead{color:var(--muted)}
+.steam{display:inline-block;color:var(--sulfur)}
+.road{position:relative;padding-top:40px}
+.car{position:absolute;top:0;width:84px;height:auto;transform:translateX(-50%);transition:left .6s ease}
+.track{display:flex;gap:6px}
+.track span{flex:1;height:8px;border-radius:4px;background:var(--line)}
+.track span.done{background:var(--moss)}
+.track span.now{background:var(--sulfur)}
+.meta{display:flex;justify-content:space-between;font-family:var(--display);font-size:.95rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.meta b{color:var(--ink)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:16px}
+.riddle{font-size:1.15rem;font-style:italic;border-left:3px solid var(--sulfur);padding-left:14px}
+.block{display:flex;flex-direction:column;gap:8px}
+.note{background:var(--sulfur-soft);border-radius:10px;padding:12px 14px;font-size:.95rem}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+button,.btn{font-family:var(--display);font-weight:500;font-size:1rem;border-radius:10px;padding:11px 16px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+button.primary{background:var(--moss);border-color:var(--moss);color:var(--surface)}
+button:focus-visible,.btn:focus-visible,input:focus-visible{outline:3px solid var(--sulfur);outline-offset:2px}
+button:disabled{opacity:.5;cursor:default}
+input[type=text]{font:inherit;padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);flex:1;min-width:0}
+.fb{font-family:var(--display);font-size:.95rem}
+.fb.ok{color:var(--ok)} .fb.bad{color:var(--bad)}
+label.check{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+label.check input{margin-top:6px;width:18px;height:18px;accent-color:var(--moss)}
+.small{font-size:.85rem;color:var(--muted)}
+.splash{padding-block:36px;text-align:left}
+.splash-big{font-family:var(--display);font-weight:800;font-size:2.2rem;line-height:1.1;text-wrap:balance;color:var(--sulfur)}
+.wallet{display:flex;gap:10px;flex-wrap:wrap;font-family:var(--display);font-size:.95rem;font-variant-numeric:tabular-nums}
+.wallet span{flex:1;min-width:0;background:var(--sulfur-soft);border-radius:8px;padding:6px 10px;display:flex;justify-content:space-between;gap:8px}
+.nav{justify-content:space-between;border-top:1px solid var(--line);padding-top:14px}
+.phone{align-items:center}
+#phone{color:var(--bad);border-color:var(--bad);background:transparent}
+#phone.armed{background:var(--bad);color:var(--surface)}
+details summary{cursor:pointer}
+details .riddle{margin-top:8px}
+.reset{align-self:center;background:none;border:none;color:var(--muted);font-size:.85rem;text-decoration:underline}
+ol.rules{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.final{font-size:3rem;font-family:var(--display);font-weight:800;color:var(--sulfur);font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:no-preference){.card{animation:rise .35s ease-out}@keyframes rise{from{transform:translateY(8px)}to{transform:none}}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="block">
+    <h3>Ratleikur · Hveragerði og Selfoss</h3>
+    <h1>Árshátíð Gdansk&#8209;vina</h1>
+    <p class="lead">Fimm stöðvar, um 25 km akstur og um 2 tímar með stoppum.</p>
+  </header>
+  <div class="road"><img class="car" id="car" src="data:image/webp;base64,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" alt=""><div class="track" id="track" aria-hidden="true"></div></div>
+  <div class="meta"><span id="where">Upphaf</span><span>Stig: <b id="score">0</b></span></div>
+  <div class="wallet"><span>Thelma <b class="krv">0 kr.</b></span><span>Gullý <b class="krv">0 kr.</b></span></div>
+  <main id="stage"></main>
+  <button class="reset" id="reset" type="button">Byrja upp á nýtt</button>
+</div>
+
+<script>
+const S = [
+  { name:"Þetta líður hjá",
+    riddle:"Við Varmá stendur steinn sem skáld lét móta svo hægt sé að setjast. Nafnið hans minnir á að allt erfitt tekur enda. Leggið bílnum við leikskólann sem ber nafn landsins sem Lísa datt ofan í, og gangið niður að ánni.",
+    map:"Leikskólinn Undraland, Þelamörk 62, Hveragerði", drive:"örstutt, innanbæjar",
+    task:"Hver og einn sest í steininn og nefnir eitt sem má alveg líða hjá. Hinir mega ekki hlæja fyrr en allir eru búnir.",
+    q:"Hvað er steinninn mótaður sem?", a:["stoll","stol","saeti","haesaeti","hasaeti","steinstoll"], reveal:"Stóll. Listaverkið er eftir Elísabetu K. Jökulsdóttur.",
+    hint:"Þið getið sest í hann." },
+  { name:"Gamla Tívolíið",
+    riddle:"Hér voru einu sinni klessubílar, Round-up og skotbakkar undir einu stóru þaki. Fjölskyldur af öllu Suðurlandi og úr bænum komu hingað. Hinum megin við götuna var Eden.",
+    map:"Austurmörk Hveragerði", drive:"örstutt, innanbæjar",
+    task:"Allir segja eina tívolíminningu, sanna eða uppspunna. Hinir giska á hvort hún er sönn.",
+    q:"Hvað hét apinn sem bjó í Eden, hinum megin við götuna?", a:["bobo"], reveal:"Bóbó. Tívolíið var opið fram til 1994 og húsið var rifið árið 2000.",
+    hint:"Tvö eins atkvæði." },
+  { name:"Kögunarhóll og náman",
+    riddle:"Fyrsti landnámsmaðurinn er sagður hafa heygt skipið sitt í litlum klettahól undir fjallinu sem ber nafn hans. Rétt hjá er fjallið sjálft étið innan frá af námu. Sleppið hraðbrautinni og takið gamla sveitaveginn meðfram henni.",
+    map:"Kögunarhóll Ölfus", drive:"um 10 mín, sveitavegurinn",
+    task:"Allir giska á hversu hátt fjallið fyrir ofan ykkur er í metrum. Sá sem er næst velur næsta lag.",
+    q:"Hvaða landnámsmaður á að hafa heygt skipið sitt í hólnum?", a:["ingolfur","ingolfurarnarson","ingolfurarnarsson"], reveal:"Ingólfur Arnarson. Ingólfsfjall er 551 m.",
+    hint:"Fjallið ber nafnið hans." },
+  { name:"Laugardælakirkja",
+    riddle:"Heimsmeistari frá 1972 valdi að hvíla í íslenskri mold. Hann liggur við litla sveitakirkju rétt austan við Selfoss, nokkrar mínútur frá brúnni.",
+    map:"Laugardælakirkja", drive:"um 10 mín, í gegnum Selfoss",
+    task:"Hver og einn stillir sér upp sem skákmaður á myndinni (peð, riddari, drottning…). Hinir giska hver er hvað.",
+    q:"Hvaða ár fæddist hann? Það stendur á legsteininum.", a:["1943"], reveal:"1943 (d. 2008)",
+    hint:"Bobby Fischer. Horfið á steininn." },
+  { name:"Motivo",
+    riddle:"Tvær konur opnuðu mig árið 2007 við Austurveg. Núna er ég flutt í nýja miðbæinn á Selfossi og er full af hönnun, fötum, skarti, gjöfum og geymslu fyrir kallana.",
+    map:"Motivo Selfoss", drive:"um 5 mín",
+    task:"Það eru drykkir í boði, fáið ykkur einn. Hver og einn finnur hlut í búðinni sem lýsir einhverjum öðrum í hópnum og hinir giska á hvern er átt við. Veljið svo einn hlut sem allir máta við sig, til dæmis húfu, trefil eða gleraugu.",
+    q:"Hvaða ár var Motivo stofnuð?", a:["2007"], reveal:"2007",
+    hint:"Stendur í gátunni." },
+];
+const norm = s => s.toLowerCase().trim().replace(/þ/g,"th").replace(/ð/g,"d").replace(/æ/g,"ae").replace(/ö/g,"o")
+  .normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]/g,"");
+const KEY="gdansk-v1";
+const blank=()=>({i:-2, max:-1, pen:0, s:S.map(()=>({arrived:false,answered:false,task:false,hint:false,map:false}))});
+let st=blank();
+try{ const v=JSON.parse(localStorage.getItem(KEY)); if(v&&Array.isArray(v.s)&&v.s.length===S.length) st=v; }catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(st))}catch(e){}};
+const $=id=>document.getElementById(id);
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const kr=n=>String(Math.max(0,n)*100).replace(/\B(?=(\d{3})+(?!\d))/g,".")+" kr.";
+const raw=()=>st.s.reduce((t,x)=>t+(x.task?5:0)+(x.answered==="ok"?10:0)-(x.hint?2:0)-(x.map?3:0),0);
+const score=()=>raw()-(st.pen||0);
+const showKr=()=>document.querySelectorAll(".krv").forEach(e=>e.textContent=kr(score()));
+function go(i){ st.i=i; if(i>st.max) st.max=i; save(); render(); window.scrollTo(0,0); }
+
+function nav(){
+  const back = st.i>=0 ? `<button type="button" id="back">← Til baka</button>` : "";
+  const fwd = st.i<st.max ? `<button type="button" id="fwd">Áfram →</button>` : "";
+  return (back||fwd) ? `<div class="row nav">${back}${fwd}</div>` : "";
+}
+function bindNav(){
+  if($("back")) $("back").onclick=()=>go(st.i-1);
+  if($("fwd")) $("fwd").onclick=()=>go(st.i+1);
+}
+
+let phoneArmed=false;
+function bindPhone(){
+  const b=$("phone"); if(!b) return;
+  b.onclick=()=>{
+    if(!phoneArmed){ phoneArmed=true; b.textContent="Ýttu aftur: öll stigin hverfa"; b.classList.add("armed");
+      setTimeout(()=>{ if(phoneArmed){ phoneArmed=false; if($("phone")){ $("phone").textContent="Sími notaður"; $("phone").classList.remove("armed"); } } },3000); return; }
+    phoneArmed=false; const sc=score(); if(sc>0) st.pen=(st.pen||0)+sc; save(); render();
+    if($("phonefb")) $("phonefb").textContent = sc>0 ? `${sc} stig þurrkuðust út.` : "Engin stig til að taka af.";
+  };
+}
+function render(){
+  $("track").innerHTML = S.map((_,k)=>`<span class="${k===st.i?'now':k<=st.max?'done':''}"></span>`).join("");
+  const pos = st.i<0?0:st.i>=S.length?100:(st.i+0.5)/S.length*100; $("car").style.left = `clamp(42px, ${pos}%, calc(100% - 42px))`;
+  $("score").textContent = score(); showKr();
+  const m=$("stage");
+  if(st.i===-2){
+    $("where").textContent="Upphaf";
+    m.innerHTML=`<section class="card splash">
+      <h3>Tvö pör · kynntust í Gdansk · bestu vinir síðan</h3>
+      <p class="splash-big">Nú hefst árshátíðarleikur Gdansk&#8209;vina</p>
+      <p class="lead">Thelma og Gullý, gerið ykkur til fyrir daginn. Á meðan skella strákarnir sér í pottinn með einn kaldan, að minnsta kosti. Svo leggjum við af stað.</p>
+      <div class="row"><button class="primary" id="start" type="button">Hefja leikinn</button></div>
+    </section>`;
+    $("start").onclick=()=>{ st.i=-1; save(); render(); }; return;
+  }
+  if(st.i<0){
+    $("where").textContent="Reglurnar";
+    m.innerHTML=`<section class="card">
+      <h2>Reglurnar</h2>
+      <ol class="rules">
+        <li>Hver stöð byrjar á gátu. Einhver les hana upphátt og hópurinn finnur út hvert á að fara.</li>
+        <li>Á staðnum er verkefni (5 stig) og spurning (10 stig) sem allur hópurinn leysir saman.</li>
+        <li>Vísbending kostar 2 stig. Að opna kortið kostar 3 stig.</li>
+        <li>Hvert stig gefur 100 kr. inneign fyrir hvora ykkar í verslun á lokastöðinni. Mest er hægt að fá 75 stig, eða 7.500 kr. á hvora.</li>
+        <li>Thelma og Gullý mega ekki nota símana sína. Strákarnir halda á leiknum, lesa allt upphátt og sjá um myndatökur.</li>
+        <li>Ef sími er notaður þurrkast út öll stigin sem hafa safnast fram að því.</li>
+      </ol>
+      <p class="small">Fararskjóti dagsins er fjólublár, glænýr og hljóðlaus. Það eina sem heyrist í honum er hláturinn.</p>
+      <div class="row"><button class="primary" id="go" type="button">${st.max>=0?"Halda áfram":"Opna fyrstu gátuna"}</button></div>
+    </section>`;
+    $("go").onclick=()=>go(st.max>=0?st.max:0); bindNav(); return;
+  }
+  if(st.i>=S.length){
+    $("where").textContent="Leik lokið";
+    const max=S.length*15, sc=score();
+    m.innerHTML=`<section class="card">
+      <h3>Hringnum lokað</h3>
+      <div class="final">${sc} <span class="small">/ ${max} stig</span></div>
+      <p class="note">Inneign í Motivo: Thelma <strong>${kr(sc)}</strong> og Gullý <strong>${kr(sc)}</strong>. Veljið ykkur eitthvað fallegt áður en þið farið út. Strákarnir borga þessar upphæðir upp í það sem þið veljið.</p>
+      <p>Þegar búið er að versla: ein hópmynd saman fyrir utan búðina.</p>
+      <p>${sc>=max-5?"Nánast fullkomið.":sc>=max/2?"Vel gert. Pottur og kaldur bíður.":"Stigin skipta engu máli í pottinum."}</p>
+      <p class="small">Fjólublái fákurinn skilar ykkur heim.</p>
+      ${nav()}
+    </section>`; bindNav(); return;
+  }
+  const s=S[st.i], x=st.s[st.i];
+  $("where").textContent=`Stöð ${st.i+1} af ${S.length}`;
+  const mapUrl="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(s.map);
+  let h=`<section class="card"><h3>Stöð ${st.i+1} · ${s.drive}</h3>`;
+  if(!x.arrived){
+    h+=`<p class="riddle">${esc(s.riddle)}</p>
+      <div class="row">
+        <button type="button" id="mapb">${x.map?"Kort opnað":"Opna kortið (−3)"}</button>
+        ${x.map?`<a class="btn" href="${mapUrl}" target="_blank" rel="noopener">${esc(s.name)} í Google Maps</a>`:""}
+      </div>
+      <div class="row"><button class="primary" id="arr" type="button">Við erum komin</button></div>`;
+  } else {
+    h+=`<h2>${esc(s.name)}</h2>
+      ${st.i===S.length-1?`<p class="note">Inneignin er núna <strong>${kr(score())}</strong> á hvora. Hér getið þið bætt við allt að 1.500 kr. á hvora. Klárið verkefnið og spurninguna áður en þið veljið hvað þið kaupið.</p>`:""}
+      <details><summary class="small">Sjá gátuna aftur</summary><p class="riddle">${esc(s.riddle)}</p></details>
+      <div class="block"><h3>Verkefni · 5 stig</h3>
+        <label class="check"><input type="checkbox" id="task" ${x.task?"checked":""}><span>${esc(s.task)}</span></label></div>
+      <div class="block"><h3>Spurning · 10 stig</h3><p>${esc(s.q)}</p>
+        ${x.answered?`<p class="fb ${x.answered==='ok'?'ok':'bad'}">${x.answered==='ok'?'Rétt!':'Svarið var'} ${esc(s.reveal)}</p>`:
+        `<div class="row"><input type="text" id="ans" autocomplete="off" aria-label="Svar"><button class="primary" id="chk" type="button">Svara</button></div>
+         <p class="fb" id="fb"></p>
+         <div class="row"><button type="button" id="hint" ${x.hint?"disabled":""}>Vísbending (−2)</button><button type="button" id="give">Gefast upp</button></div>
+         ${x.hint?`<p class="note">${esc(s.hint)}</p>`:""}`}
+      </div>
+      ${st.i===st.max?`<div class="row"><button class="primary" id="nx" type="button" ${x.answered?"":"disabled"}>${st.i===S.length-1?"Ljúka leiknum og sjá inneignina":"Næsta gáta"}</button></div>`:""}`;
+  }
+  m.innerHTML=h+nav()+`<div class="row phone"><button type="button" id="phone">Sími notaður</button><span class="small" id="phonefb"></span></div></section>`;
+  bindNav(); bindPhone();
+  if(!x.arrived){
+    $("mapb").onclick=()=>{ if(!x.map){x.map=true; save(); render();} };
+    $("arr").onclick=()=>{ x.arrived=true; save(); render(); };
+  } else {
+    $("task").onchange=e=>{ x.task=e.target.checked; save(); $("score").textContent=score(); showKr(); };
+    if(!x.answered){
+      const check=()=>{ const v=norm($("ans").value); if(!v) return;
+        if(s.a.includes(v)){ x.answered="ok"; save(); render(); }
+        else { $("fb").className="fb bad"; $("fb").textContent="Ekki alveg. Reynið aftur."; } };
+      $("chk").onclick=check; $("ans").onkeydown=e=>{ if(e.key==="Enter") check(); };
+      $("hint").onclick=()=>{ x.hint=true; save(); render(); };
+      $("give").onclick=()=>{ x.answered="gave"; save(); render(); };
+    }
+    if($("nx")) $("nx").onclick=()=>go(st.i+1);
+  }
+}
+let armed=false;
+$("reset").onclick=()=>{ if(!armed){ armed=true; $("reset").textContent="Ýttu aftur til að staðfesta"; setTimeout(()=>{armed=false;$("reset").textContent="Byrja upp á nýtt";},3000); return; }
+  armed=false; $("reset").textContent="Byrja upp á nýtt"; st=blank(); save(); render(); };
+render();
+</script>
+
+</body>
+</html>
